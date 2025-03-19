@@ -31,15 +31,16 @@ const commentSchema = new mongoose.Schema({
 
 const Comment = mongoose.model('Comment', commentSchema, 'comm');
 
-// 📌 Возвращаем JSON, а не HTML
 app.get('/', async (req, res) => {
   try {
     console.log('Запрос получен на сервер');
     const comments = await Comment.find({});
-    console.log('Данные из MongoDB:', comments); // Логируем данные
+    console.log('Данные из MongoDB:', JSON.stringify(comments, null, 2)); // Логирование с форматированием
+
     if (comments.length === 0) {
       console.log('Нет данных в базе');
     }
+
     res.json(comments);
   } catch (error) {
     console.error('Ошибка:', error);
