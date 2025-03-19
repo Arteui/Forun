@@ -3,39 +3,36 @@ const mongoose = require('mongoose');
 const cors = require('cors');
 
 const app = express();
-const PORT = process.env.PORT || 3000;
-
 app.use(cors());
 app.use(express.json());
 
 // Подключение к MongoDB Atlas
-const mongoURI = process.env.MONGO_URI || 'mongodb+srv://tema333345:qwerty123@forumdata.i71cb.mongodb.net/?retryWrites=true&w=majority&appName=ForumData';
+const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://tema333345:<db_password>@forumdata.i71cb.mongodb.net/?retryWrites=true&w=majority&appName=ForumData";
+mongoose.connect(MONGO_URI)
+  .then(() => console.log('✅ Подключено к MongoDB'))
+  .catch(err => console.error('❌ Ошибка подключения к MongoDB:', err));
 
-mongoose.connect(mongoURI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-  .then(() => console.log('MongoDB подключен'))
-  .catch(err => console.error('Ошибка подключения:', err));
-
-// Модель данных
-const commentSchema = new mongoose.Schema({
+// Модель комментария
+const Comment = mongoose.model('Comment', new mongoose.Schema({
   text: String,
-  id: Number,
   children: Array
-});
+}));
 
-const Comment = mongoose.model('comme', commentSchema, 'comme');
-
-// API для получения комментариев
-app.get('/api/comments', async (req, res) => {
+// 📌 Возвращаем JSON, а не HTML
+app.get('/', async (req, res) => {
   try {
-    const comments = await Comment.find();
-    res.json(comments);
+    const comments = await Comment.find({});
+    res.json(comments);  // Возвращаем JSON, а не HTML
   } catch (error) {
-    res.status(500).send('Ошибка получения данных');
+    console.error('Ошибка:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
   }
 });
 
-// Запуск сервера
-app.listen(PORT, () => console.log(`Сервер работает на порту ${PORT}`));
+// ⚠️ Добавь обработчик для несуществующих маршрутов (чтобы не было 404 HTML)
+app.use((req, res) => {
+  res.status(404).json({ message: 'Ресурс не найден' });
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`🚀 Сервер запущен на порту ${PORT}`));
