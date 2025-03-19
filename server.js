@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 // Подключение к MongoDB Atlas
-const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://tema333345:<db_password>@forumdata.i71cb.mongodb.net/?retryWrites=true&w=majority&appName=ForumData";
+const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://tema333345:qwerty123@cluster0.gz8dh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Подключено к MongoDB'))
   .catch(err => console.error('❌ Ошибка подключения к MongoDB:', err));
