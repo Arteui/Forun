@@ -19,13 +19,8 @@ const commentSchema = new mongoose.Schema({
   text: String,
   id: Number,
   children: [{
-    text: String,
-    id: Number,
-    children: [{
-      text: String,
-      id: Number,
-      children: [{ text: String, id: Number }]
-    }]
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Comment'
   }]
 });
 
