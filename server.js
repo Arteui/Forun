@@ -16,7 +16,7 @@ mongoose.connect(MONGO_URI)
 const Comment = mongoose.model('Comment', new mongoose.Schema({
   text: String,
   children: Array
-}));
+}), 'comm');  // <-- Указываем правильную коллекцию
 
 // 📌 Возвращаем JSON, а не HTML
 app.get('/', async (req, res) => {
