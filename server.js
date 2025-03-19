@@ -36,3 +36,21 @@ app.use((req, res) => {
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Сервер запущен на порту ${PORT}`));
+
+
+
+
+app.get('/', async (req, res) => {
+  try {
+    console.log('Запрос получен на сервер');
+    const comments = await Comment.find({});
+    console.log('Данные из MongoDB:', comments); // Логируем данные
+    if (comments.length === 0) {
+      console.log('Нет данных в базе');
+    }
+    res.json(comments);
+  } catch (error) {
+    console.error('Ошибка:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
+  }
+});
