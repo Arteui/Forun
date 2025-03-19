@@ -14,10 +14,22 @@ mongoose.connect(MONGO_URI)
   .catch(err => console.error('❌ Ошибка подключения к MongoDB:', err));
 
 // Модель комментария
-const Comment = mongoose.model('Comment', new mongoose.Schema({
+
+const commentSchema = new mongoose.Schema({
   text: String,
-  children: Array
-}), 'comm');  // <-- Указываем правильную коллекцию
+  id: Number,
+  children: [{
+    text: String,
+    id: Number,
+    children: [{
+      text: String,
+      id: Number,
+      children: [{ text: String, id: Number }]
+    }]
+  }]
+});
+
+const Comment = mongoose.model('Comment', commentSchema, 'comm');
 
 // 📌 Возвращаем JSON, а не HTML
 app.get('/', async (req, res) => {
