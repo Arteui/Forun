@@ -47,6 +47,36 @@ app.get('/', async (req, res) => {
   }
 });
 
+app.post('/comments', async (req, res) => {
+  try {
+    const { text, parentId } = req.body;
+
+    // Создание нового комментария
+    const newComment = new Comment({
+      text: text,
+      id: Date.now(),
+      children: []
+    });
+
+    // Если есть parentId, добавляем в children родителя
+    if (parentId) {
+      const parent = await Comment.findById(parentId);
+      if (parent) {
+        parent.children.push(newComment._id);
+        await parent.save();
+      }
+    }
+
+    // Сохраняем комментарий
+    await newComment.save();
+    res.status(201).json({ message: 'Комментарий добавлен', comment: newComment });
+    
+  } catch (error) {
+    console.error('Ошибка при добавлении комментария:', error);
+    res.status(500).json({ message: 'Ошибка сервера' });
+  }
+});
+
 // ⚠️ Добавь обработчик для несуществующих маршрутов (чтобы не было 404 HTML)
 app.use((req, res) => {
   res.status(404).json({ message: 'Ресурс не найден' });
