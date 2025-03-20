@@ -7,7 +7,7 @@ app.use(cors());
 app.use(express.json());
 
 // Подключение к MongoDB Atlas
-const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://tema333345:qwerty123@cluster0.gz8dh.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+const MONGO_URI = process.env.MONGO_URI || "mongodb+srv://tema333345:qwerty123@cluster0.gz8dh.mongodb.net/Comments?retryWrites=true&w=majority&appName=Cluster0";
 console.log('Подключение к MongoDB:', MONGO_URI);
 mongoose.connect(MONGO_URI)
   .then(() => console.log('✅ Подключено к MongoDB'))
