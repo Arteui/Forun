@@ -33,8 +33,8 @@ const Comment = mongoose.model('Comment', commentSchema, 'comm');
 app.get('/', async (req, res) => {
   try {
     console.log('Запрос получен на сервер');
-    const comments = await Comment.find({});
-    console.log('Данные из MongoDB:', JSON.stringify(comments, null, 2)); // Логирование с форматированием
+    const comments = await Comment.find({}).populate('children');
+    console.log('Данные из MongoDB:', comments);
 
     if (comments.length === 0) {
       console.log('Нет данных в базе');
