@@ -60,7 +60,8 @@ app.post('/comments', async (req, res) => {
       const parent = await Comment.findById(parentId);
 
       if (parent) {
-        parent.children.push(newComment);  // Добавляем в поле children родителя
+        // Добавляем новый комментарий в children родительского комментария
+        parent.children.push(newComment._id); // Используем _id нового комментария, чтобы связать их
         await parent.save();  // Сохраняем изменения родителя с новым ответом
         console.log('Ответ добавлен в родительский комментарий');
       } else {
