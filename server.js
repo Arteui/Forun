@@ -47,26 +47,37 @@ app.post('/comments', async (req, res) => {
   try {
     const { text, parentId } = req.body;
 
+    // Логирование данных
+    console.log('📥 Входящие данные для добавления комментария:', { text, parentId });
+
     const newComment = new Comment({
       text: text,
       id: Date.now(),
       children: []
     });
 
+    // Если есть parentId, добавляем новый комментарий как ответ
     if (parentId) {
+      // Найдём родительский комментарий по ID
       const parent = await Comment.findById(parentId);
+
       if (parent) {
+        // Добавляем новый комментарий в children родительского
         parent.children.push(newComment._id);
-        await parent.save();
+        await parent.save();  // Сохраняем изменения в родителе
+        console.log('🔗 Ответ добавлен в родительский комментарий');
+      } else {
+        console.log('❌ Родительский комментарий не найден');
       }
     }
 
+    // Сохраняем сам новый комментарий
     await newComment.save();
     res.status(201).json({ message: 'Комментарий добавлен', comment: newComment });
 
   } catch (error) {
-    console.error('Ошибка при добавлении комментария:', error);
-    res.status(500).json({ message: 'Ошибка сервера' });
+    console.error('❌ Ошибка при добавлении комментария:', error);
+    res.status(500).json({ message: 'Ошибка сервера', error: error.message });
   }
 });
 
