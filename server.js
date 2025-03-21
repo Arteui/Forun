@@ -14,7 +14,6 @@ mongoose.connect(MONGO_URI)
   .catch(err => console.error('❌ Ошибка подключения к MongoDB:', err));
 
 // Модель комментария
-
 const commentSchema = new mongoose.Schema({
   text: String,
   id: Number,
@@ -26,6 +25,7 @@ const commentSchema = new mongoose.Schema({
 
 const Comment = mongoose.model('Comment', commentSchema, 'comm');
 
+// Получение всех комментариев
 app.get('/', async (req, res) => {
   try {
     console.log('Запрос получен на сервер');
@@ -43,11 +43,13 @@ app.get('/', async (req, res) => {
   }
 });
 
+// Добавление комментария
 app.post('/comments', async (req, res) => {
   try {
     const { text, parentId } = req.body;  // Получаем текст комментария и parentId
-    console.log('Полученные данные:', { text, parentId });  // Логируем данные
+    console.log('Полученные данные:', { text, parentId });
 
+    // Создаем новый комментарий
     const newComment = new Comment({
       text: text,
       id: Date.now(),
@@ -59,7 +61,7 @@ app.post('/comments', async (req, res) => {
       const parent = await Comment.findById(parentId);
 
       if (parent) {
-        parent.children.push(newComment._id);  // Добавляем _id нового комментария
+        parent.children.push(newComment._id);  // Добавляем _id нового комментария в children родителя
         await parent.save();
         console.log('Ответ добавлен в родительский комментарий');
       } else {
