@@ -56,7 +56,6 @@ app.post('/comments', async (req, res) => {
 
     // Если есть parentId, это значит, что это ответ
     if (parentId) {
-      // Находим родительский комментарий по parentId
       const parent = await Comment.findById(parentId);
 
       if (parent) {
