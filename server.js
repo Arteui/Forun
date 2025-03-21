@@ -49,7 +49,6 @@ app.post('/comments', async (req, res) => {
     const { text, parentId } = req.body;  // Получаем текст комментария и parentId
     console.log('Полученные данные:', { text, parentId });
 
-    // Создаем новый комментарий
     const newComment = new Comment({
       text: text,
       id: Date.now(),
@@ -61,7 +60,7 @@ app.post('/comments', async (req, res) => {
       const parent = await Comment.findById(parentId);
 
       if (parent) {
-        parent.children.push(newComment._id);  // Добавляем _id нового комментария в children родителя
+        parent.children.push(newComment._id);  // Добавляем _id нового комментария
         await parent.save();
         console.log('Ответ добавлен в родительский комментарий');
       } else {
@@ -77,6 +76,7 @@ app.post('/comments', async (req, res) => {
     res.status(500).json({ message: 'Ошибка сервера', error: error.message });
   }
 });
+
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Сервер запущен на порту ${PORT}`));
