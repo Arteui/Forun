@@ -56,6 +56,7 @@ app.post('/comments', async (req, res) => {
 
     // Если есть parentId, это значит, что это ответ
     if (parentId) {
+      // Находим родительский комментарий по parentId
       const parent = await Comment.findById(parentId);
 
       if (parent) {
@@ -76,7 +77,6 @@ app.post('/comments', async (req, res) => {
     res.status(500).json({ message: 'Ошибка сервера', error: error.message });
   }
 });
-
 
 // ⚠️ Добавь обработчик для несуществующих маршрутов (чтобы не было 404 HTML)
 app.use((req, res) => {
