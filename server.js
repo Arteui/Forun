@@ -14,6 +14,7 @@ mongoose.connect(MONGO_URI)
   .catch(err => console.error('❌ Ошибка подключения к MongoDB:', err));
 
 // Модель комментария
+
 const commentSchema = new mongoose.Schema({
   text: String,
   id: Number,
@@ -25,7 +26,6 @@ const commentSchema = new mongoose.Schema({
 
 const Comment = mongoose.model('Comment', commentSchema, 'comm');
 
-// Получение всех комментариев
 app.get('/', async (req, res) => {
   try {
     console.log('Запрос получен на сервер');
@@ -43,11 +43,10 @@ app.get('/', async (req, res) => {
   }
 });
 
-// Добавление комментария
 app.post('/comments', async (req, res) => {
   try {
     const { text, parentId } = req.body;  // Получаем текст комментария и parentId
-    console.log('Полученные данные:', { text, parentId });
+    console.log('Полученные данные:', { text, parentId });  // Логируем данные
 
     const newComment = new Comment({
       text: text,
@@ -77,6 +76,5 @@ app.post('/comments', async (req, res) => {
   }
 });
 
-
 const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => console.log(`🚀 Сервер запущен на порту ${PORT}`));
+app.listen(PORT, () => console.log(🚀 Сервер запущен на порту ${PORT}));
