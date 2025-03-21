@@ -46,22 +46,25 @@ app.get('/', async (req, res) => {
 app.post('/comments', async (req, res) => {
   try {
     const { text, parentId } = req.body;  // Получаем текст комментария и parentId
+    console.log('Полученные данные:', { text, parentId });  // Логируем данные
 
-    // Создаем новый комментарий, но не сохраняем его сразу
+    // Создаем новый комментарий
     const newComment = new Comment({
       text: text,
-      id: Date.now(), 
+      id: Date.now(),
       children: []  // Новый комментарий изначально не имеет детей
     });
 
     // Если есть parentId, это значит, что это ответ
     if (parentId) {
+      console.log('Ищем родительский комментарий с ID:', parentId);  // Логируем поиск родителя
       // Находим родительский комментарий по parentId
       const parent = await Comment.findById(parentId);
 
       if (parent) {
-        // Добавляем новый комментарий в поле children родительского комментария
-        parent.children.push(newComment._id);  // Здесь мы добавляем ObjectId нового комментария
+        console.log('Родительский комментарий найден:', parent);  // Логируем найденного родителя
+        // Добавляем новый комментарий в children родительского комментария
+        parent.children.push(newComment._id);  // Добавляем _id нового комментария
         await parent.save();  // Сохраняем родительский комментарий с обновленным полем children
         console.log('Ответ добавлен в родительский комментарий');
       } else {
@@ -69,7 +72,7 @@ app.post('/comments', async (req, res) => {
       }
     }
 
-    // Теперь сохраняем новый комментарий
+    // Сохраняем сам новый комментарий в базе
     await newComment.save();
     res.status(201).json({ message: 'Комментарий добавлен', comment: newComment });
 
@@ -77,11 +80,6 @@ app.post('/comments', async (req, res) => {
     console.error('Ошибка при добавлении комментария:', error);
     res.status(500).json({ message: 'Ошибка сервера', error: error.message });
   }
-});
-
-// ⚠️ Добавь обработчик для несуществующих маршрутов (чтобы не было 404 HTML)
-app.use((req, res) => {
-  res.status(404).json({ message: 'Ресурс не найден' });
 });
 
 const PORT = process.env.PORT || 3000;
