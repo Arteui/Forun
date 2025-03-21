@@ -48,31 +48,25 @@ app.post('/comments', async (req, res) => {
     const { text, parentId } = req.body;  // Получаем текст комментария и parentId
     console.log('Полученные данные:', { text, parentId });  // Логируем данные
 
-    // Создаем новый комментарий
     const newComment = new Comment({
       text: text,
       id: Date.now(),
       children: []  // Новый комментарий изначально не имеет детей
     });
 
-    // Если есть parentId, это значит, что это ответ
     if (parentId) {
-      console.log('Ищем родительский комментарий с ID:', parentId);  // Логируем поиск родителя
-      // Находим родительский комментарий по parentId
+      console.log('Ищем родительский комментарий с ID:', parentId);
       const parent = await Comment.findById(parentId);
 
       if (parent) {
-        console.log('Родительский комментарий найден:', parent);  // Логируем найденного родителя
-        // Добавляем новый комментарий в children родительского комментария
         parent.children.push(newComment._id);  // Добавляем _id нового комментария
-        await parent.save();  // Сохраняем родительский комментарий с обновленным полем children
+        await parent.save();
         console.log('Ответ добавлен в родительский комментарий');
       } else {
         return res.status(404).json({ message: 'Родительский комментарий не найден' });
       }
     }
 
-    // Сохраняем сам новый комментарий в базе
     await newComment.save();
     res.status(201).json({ message: 'Комментарий добавлен', comment: newComment });
 
