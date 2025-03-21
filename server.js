@@ -77,6 +77,7 @@ app.post('/comments', async (req, res) => {
   }
 });
 
+
 // ⚠️ Добавь обработчик для несуществующих маршрутов (чтобы не было 404 HTML)
 app.use((req, res) => {
   res.status(404).json({ message: 'Ресурс не найден' });
